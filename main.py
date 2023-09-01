@@ -4,7 +4,9 @@ from Library import *
 
 class Ui_MainWindow(object):
     def __init__(self):
-        self.select_Button = None
+        self.Buy_Direct = None
+        self.profit_Button = None
+        self.details_Button = None
         self.label = None
         self.tableWidget = None
         self.Sold = None
@@ -51,11 +53,14 @@ class Ui_MainWindow(object):
         self.Book_Details_page = QtWidgets.QWidget()
         self.Book_Details_page.setGeometry(QtCore.QRect(0, 0, 691, 331))
         self.Book_Details_page.setObjectName("Book_Details_page")
-        self.select_Button = QtWidgets.QPushButton(self.Library_page, clicked=lambda: self.show_book_details())
-        self.select_Button.setGeometry(QtCore.QRect(500, 0, 151, 31))
-        self.select_Button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.select_Button.setCheckable(True)
-        self.select_Button.setObjectName("Select_Button")
+        self.details_Button = QtWidgets.QPushButton(self.Library_page, clicked=lambda: self.show_book_details())
+        self.details_Button.setGeometry(QtCore.QRect(500, 10, 151, 31))
+        self.details_Button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.details_Button.setObjectName("details_Button")
+        self.profit_Button = QtWidgets.QPushButton(self.Library_page, clicked=lambda: self.show_profit_details())
+        self.profit_Button.setGeometry(QtCore.QRect(500, 41, 151, 31))
+        self.profit_Button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.profit_Button.setObjectName("profit_Button")
         self.Book_Details_List = QtWidgets.QListWidget(self.Book_Details_page)
         self.Book_Details_List.setGeometry(QtCore.QRect(50, 20, 581, 271))
         self.Book_Details_List.setObjectName("Book_Details_List")
@@ -73,14 +78,17 @@ class Ui_MainWindow(object):
                                                    clicked=lambda: self.search_for_book(self.Search_Bar.text()))
         self.Search_Button.setGeometry(QtCore.QRect(500, 50, 151, 31))
         self.Search_Button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.Search_Button.setCheckable(True)
         self.Search_Button.setObjectName("Search_Button")
         self.Buy_Button = QtWidgets.QPushButton(self.Search,
-                                                clicked=lambda: self.search_and_buy(text1=self.Search_Bar.text()))
+                                                clicked=lambda: self.search_and_buy(self.Search_Bar.text()))
         self.Buy_Button.setGeometry(QtCore.QRect(500, 80, 151, 31))
         self.Buy_Button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.Buy_Button.setCheckable(True)
         self.Buy_Button.setObjectName("Buy_Button")
+        self.Buy_Direct = QtWidgets.QPushButton(self.Book_Details_page,
+                                                clicked=lambda: self.buy_directly())
+        self.Buy_Direct.setGeometry(QtCore.QRect(480, 20, 151, 31))
+        self.Buy_Direct.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.Buy_Direct.setObjectName("Buy_Direct")
         self.Search_comboBox = QtWidgets.QComboBox(self.Search)
         self.Search_comboBox.setGeometry(QtCore.QRect(80, 20, 151, 31))
         self.Search_comboBox.setObjectName("comboBox")
@@ -124,15 +132,17 @@ class Ui_MainWindow(object):
     def translateUi(self, Main_Window):
         _translate = QtCore.QCoreApplication.translate
         Main_Window.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.toolBox.setItemText(self.toolBox.indexOf(self.Library_page), _translate("MainWindow", "Library_Details"))
-        self.toolBox.setItemText(self.toolBox.indexOf(self.Book_Details_page), _translate("MainWindow", "Book_Details"))
+        self.toolBox.setItemText(self.toolBox.indexOf(self.Library_page), _translate("MainWindow", "Library Details"))
+        self.toolBox.setItemText(self.toolBox.indexOf(self.Book_Details_page), _translate("MainWindow", "Book Details"))
         self.LIBRARY_MainWindow.setTabText(self.LIBRARY_MainWindow.indexOf(self.Library),
                                            _translate("MainWindow", "Library"))
         self.Search_Button.setText(_translate("MainWindow", "Search"))
         self.Buy_Button.setText(_translate("MainWindow", "Buy"))
-        self.select_Button.setText(_translate("MainWindow", "select"))
+        self.details_Button.setText(_translate("MainWindow", "Details"))
+        self.profit_Button.setText(_translate("MainWindow", "Total Profit"))
+        self.Buy_Direct.setText(_translate("MainWindow", "Buy directly"))
         self.LIBRARY_MainWindow.setTabText(self.LIBRARY_MainWindow.indexOf(self.Search),
-                                           _translate("MainWindow", "Search_buy"))
+                                           _translate("MainWindow", "Search/buy"))
         item = self.tableWidget.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Book"))
         item = self.tableWidget.horizontalHeaderItem(1)
@@ -146,13 +156,15 @@ class Ui_MainWindow(object):
 
     def show_book_details(self):
         self.Book_Details_List.clear()
-        book_title = self.Library_list.currentItem().text()
-        self.toolBox.setCurrentIndex(1)
-        book = self.library.search_book_by_title(book_title)
-        self.Book_Details_List.addItem("Title: " + book_title)
-        self.Book_Details_List.addItem("Author: " + book.get_author())
-        self.Book_Details_List.addItem("Section: " + book.get_section())
-        self.Book_Details_List.addItem("Price: " + str(book.get_cost()))
+        clicked = self.Library_list.currentRow()
+        if clicked != -1:
+            book_title = self.Library_list.currentItem().text()
+            self.toolBox.setCurrentIndex(1)
+            book = self.library.search_book_by_title(book_title)
+            self.Book_Details_List.addItem("Title: " + book_title)
+            self.Book_Details_List.addItem("Author: " + book.get_author())
+            self.Book_Details_List.addItem("Section: " + book.get_section())
+            self.Book_Details_List.addItem("Price: " + str(book.get_cost()))
 
     def search_for_book(self, text):
         self.Search_Results.clear()
@@ -198,6 +210,32 @@ class Ui_MainWindow(object):
             self.LIBRARY_MainWindow.setCurrentIndex(2)
         else:
             self.Search_Results.addItem("Not Available!")
+
+    def show_profit_details(self):
+        self.Book_Details_List.clear()
+        self.toolBox.setCurrentIndex(1)
+        profit, books = self.library.get_total_profit()
+        self.Book_Details_List.addItem("Total Profit: " + str(profit))
+        self.Book_Details_List.addItem("Total sold books: " + str(books))
+
+    def buy_directly(self):
+        clicked = self.Library_list.currentRow()
+        if clicked != -1 and self.Book_Details_List.count() == 4:
+            bought = self.library.search_book_by_title(self.Library_list.currentItem().text())
+            self.library.sell_book(bought.get_title())
+            self.Library_list.takeItem(self.Library_list.currentRow())
+            self.tableWidget.insertRow(0)
+            self.tableWidget.setItem(0, 0, QtWidgets.QTableWidgetItem(bought.get_title()))
+            self.tableWidget.setItem(0, 1,
+                                     QtWidgets.QTableWidgetItem(bought.get_author()))
+            self.tableWidget.setItem(0, 2,
+                                     QtWidgets.QTableWidgetItem(bought.get_section()))
+            self.tableWidget.setItem(0, 3,
+                                     QtWidgets.QTableWidgetItem(
+                                         str(bought.get_cost())))
+            self.Book_Details_List.clear()
+            self.toolBox.setCurrentIndex(0)
+            self.LIBRARY_MainWindow.setCurrentIndex(2)
 
 
 if __name__ == "__main__":

@@ -20,6 +20,8 @@ def get_sections():
 
 
 class Library:
+    __sold_books = 0
+
     def __init__(self, title):
         self.__title = title
         self.__sections = get_sections()
@@ -50,11 +52,12 @@ class Library:
             book = section.search_book_by_title(title)
             if book is not None:
                 self.__profit += book.get_cost()
+                self.__sold_books += 1
                 section.delete_book(title)
                 return
 
     def get_total_profit(self):
-        return self.__profit
+        return self.__profit, self.__sold_books
 
     def get_sections(self):
         return self.__sections
