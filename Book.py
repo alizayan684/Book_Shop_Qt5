@@ -18,4 +18,3 @@ class Book:
 
     def get_section(self):
         return self.__section
-
