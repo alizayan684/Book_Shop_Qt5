@@ -35,16 +35,16 @@ class Ui_MainWindow(object):
     def setupUi(self, Main_Window):
         Main_Window.setObjectName("MainWindow")
         Main_Window.resize(737, 484)
-
+        # main window
         self.central_widget = QtWidgets.QWidget(Main_Window)
         self.central_widget.setObjectName("central-widget")
-
+        # library Tab
         self.Library = QtWidgets.QWidget()
         self.Library.setObjectName("Library")
-
+        # search Tab
         self.Search = QtWidgets.QWidget()
         self.Search.setObjectName("Search")
-
+        # sold Tab
         self.Sold = QtWidgets.QWidget()
         self.Sold.setObjectName("Sold")
 
@@ -57,11 +57,11 @@ class Ui_MainWindow(object):
         self.LIBRARY_MainWindow.addTab(self.Sold, "")
 
         ############################################################################
-
+        # Library tool box page
         self.Library_page = QtWidgets.QWidget()
         self.Library_page.setGeometry(QtCore.QRect(0, 0, 691, 331))
         self.Library_page.setObjectName("Library_page")
-
+        # Library list
         self.Library_list = QtWidgets.QListWidget(self.Library_page)
         self.Library_list.setGeometry(QtCore.QRect(40, 11, 611, 281))
         self.Library_list.setObjectName("Library_list")
@@ -86,7 +86,7 @@ class Ui_MainWindow(object):
         self.profit_Button.setObjectName("profit_Button")
 
         #######################################################################################
-
+        # Book details tool box page
         self.Book_Details_page = QtWidgets.QWidget()
         self.Book_Details_page.setGeometry(QtCore.QRect(0, 0, 691, 331))
         self.Book_Details_page.setObjectName("Book_Details_page")
@@ -94,14 +94,14 @@ class Ui_MainWindow(object):
         self.Book_Details_List = QtWidgets.QListWidget(self.Book_Details_page)
         self.Book_Details_List.setGeometry(QtCore.QRect(50, 20, 581, 271))
         self.Book_Details_List.setObjectName("Book_Details_List")
-
+        # buy directly button
         self.Buy_Direct = QtWidgets.QPushButton(self.Book_Details_page, clicked=lambda: self.buy_directly())
         self.Buy_Direct.setGeometry(QtCore.QRect(480, 20, 151, 31))
         self.Buy_Direct.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.Buy_Direct.setObjectName("Buy_Direct")
 
         #######################################################################################
-
+        # add book tool box page
         self.add_book_page = QtWidgets.QWidget()
         self.add_book_page.setGeometry(QtCore.QRect(0, 0, 691, 331))
         self.add_book_page.setObjectName("add_book")
@@ -129,7 +129,7 @@ class Ui_MainWindow(object):
         self.add_Button.setObjectName("add_Button")
 
         #################################################################################
-
+        #tool box
         self.toolBox = QtWidgets.QToolBox(self.Library)
         self.toolBox.setGeometry(QtCore.QRect(20, 14, 691, 391))
         self.toolBox.setObjectName("toolBox")
